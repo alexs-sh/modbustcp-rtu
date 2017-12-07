@@ -37,10 +37,9 @@ cppcheck:
   script:
     # Подготовка
     - echo 'No errors' > report_linux.txt
-    - echo 'No errors' > report_windows.txt
        
     # CPPCHECK
-    - cppcheck --enable=all  --verbose --quiet -I . 2&>report_linux.txt 
+    - cppcheck --enable=all  --verbose --quiet -I. .  2&>report_linux.txt
 
     # Вывод результатов
     - echo '1. Linux'
@@ -53,7 +52,6 @@ cppcheck:
     when: always
     paths:
     - report_linux.txt
-    - report_windows.txt
   tags:
     - docker
 
