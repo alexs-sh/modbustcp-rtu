@@ -80,7 +80,7 @@ arch-amd64-build-mem-undef-san:
   stage: build
   script:
     - cmake . -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_FLAGS='-g -fPIC -O1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-rtti -fsanitize=leak -fsanitize=address -fsanitize=undefined -std=c++98' 
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
@@ -96,7 +96,7 @@ debian-amd64-build-release:
   stage: build
   script:
     - cmake . -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"  
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
@@ -113,7 +113,7 @@ debian-amd64-build-debug:
   stage: build
   script:
     - cmake . -DCMAKE_CXX_FLAGS="-g -fPIC -O0" -DCMAKE_INSTALL_PREFIX=fakeroot -DVOLCANO_BUILD_TEST=1
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
@@ -130,7 +130,7 @@ debian-i386-build-release:
   stage: build
   script:
     - cmake . -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
@@ -146,7 +146,7 @@ arch-aarch64-build-odroid-c2:
   image: localhost:5000/arch-cross-aarch64
   script:
     - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/odroid-c2.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC" -DCMAKE_INSTALL_PREFIX=fakeroot -DVOLCANO_BUILD_TEST=1
-    - make install -j $NCPU 
+    - make -j $NCPU 
   artifacts:
     expire_in: 1 hour
     paths:
@@ -162,7 +162,7 @@ debian-armv7hf-build-uc8410a:
   image: localhost:5000/debian-cross-armv7hf 
   script:
     - cmake .  -DCMAKE_TOOLCHAIN_FILE="targets/xscale-uc8410a.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
@@ -178,7 +178,7 @@ linux-armv5hf-build-orion-28:
   image: localhost:5000/debian-cross-orion-28
   script:
     - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/freescale-orion-28.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS" 
-    - make install -j $NCPU
+    - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
