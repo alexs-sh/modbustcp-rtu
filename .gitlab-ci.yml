@@ -84,7 +84,7 @@ arch-amd64-build-mem-undef-san:
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_iver_ext
   tags:
     - docker
 
@@ -100,7 +100,7 @@ debian-amd64-build-release:
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
       
@@ -112,12 +112,12 @@ debian-amd64-build-debug:
   image: localhost:5000/debian-base 
   stage: build
   script:
-    - cmake . -DCMAKE_CXX_FLAGS="-g -fPIC -O0" -DCMAKE_INSTALL_PREFIX=fakeroot -DVOLCANO_BUILD_TEST=1
+    - cmake . -DCMAKE_CXX_FLAGS="-g -fPIC -O0" 
     - make -j $NCPU
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
       
@@ -134,7 +134,7 @@ debian-i386-build-release:
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
       
@@ -145,12 +145,12 @@ arch-aarch64-build-odroid-c2:
   stage: build
   image: localhost:5000/arch-cross-aarch64
   script:
-    - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/odroid-c2.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC" -DCMAKE_INSTALL_PREFIX=fakeroot -DVOLCANO_BUILD_TEST=1
+    - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/odroid-c2.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
     - make -j $NCPU 
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
 
@@ -166,7 +166,7 @@ debian-armv7hf-build-uc8410a:
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
 
@@ -182,7 +182,7 @@ linux-armv5hf-build-orion-28:
   artifacts:
     expire_in: 1 hour
     paths:
-    - fakeroot
+    - mb_driver_ext
   tags:
     - docker
 
