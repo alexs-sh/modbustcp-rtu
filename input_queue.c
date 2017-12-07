@@ -84,7 +84,7 @@ int queue_push(queue_t *queue, const void *src) {
 int queue_pop(queue_t *queue, void *dst) {
   assert(queue);
 
-  if (queue->size <= 0) return 0;
+  if (queue->size == 0) return 0;
   /* Вычислить адрес памяти, куда будет добавлен объект
   адрес = начало буфера + номер записи * размер элемента */
   // uint8_t * ptr = queue->data + queue->read_pos * queue->element_size;
