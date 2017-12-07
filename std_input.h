@@ -5,6 +5,6 @@
 #include "global.h"
 #endif
 
-void stdin_create(common_info_t * info);
+void stdin_create(common_info_t* info);
 
-#endif // STD_INPUT_H_INCLUDED
+#endif  // STD_INPUT_H_INCLUDED
