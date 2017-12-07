@@ -255,7 +255,7 @@ static void print_info(common_info_t* info) {
     server_info = info->server_info;
 
     send_line_args(fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
-                   "\tDisconnect timeout, ms:%d",
+                   "\tDisconnect timeout, ms:%u",
                    info->settings->disconnect_timeout_ms);
     send_line_args(fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
                    "\tMaximum clients:%d", MAX_CONNECTIONS);
@@ -270,14 +270,14 @@ static void print_info(common_info_t* info) {
 #ifdef MX_BIG_ENDIAN
         send_line_args(
             fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
-            "\t\t%d) %d.%d.%d.%d:%d", counter, (ip_addr & 0xFF000000) >> 24,
+            "\t\t%d) %u.%u.%u.%u:%d", counter, (ip_addr & 0xFF000000) >> 24,
             (ip_addr & 0x00FF0000) >> 16, (ip_addr & 0x0000FF00) >> 8,
             (ip_addr & 0x000000FF),
             socket_get_client_port(server_info->clients_info[i].client->fd));
 #else
         send_line_args(
             fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
-            "\t\t%d) %d.%d.%d.%d:%d", counter, (ip_addr & 0x000000FF),
+            "\t\t%d) %u.%u.%u.%u:%d", counter, (ip_addr & 0x000000FF),
             (ip_addr & 0x0000FF00) >> 8, (ip_addr & 0x00FF0000) >> 16,
             (ip_addr & 0xFF000000) >> 24,
             socket_get_client_port(server_info->clients_info[i].client->fd));
@@ -291,7 +291,7 @@ static void print_info(common_info_t* info) {
   send_line_args(fd, buffer, CMD_CLIENT_BUFFER_SIZE, result, "\tDevice:%s",
                  info->settings->device);
   send_line_args(fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
-                 "\tSilence timeout, ms:%d",
+                 "\tSilence timeout, ms:%u",
                  info->settings->silence_timeout_ms);
   send_line_args(fd, buffer, CMD_CLIENT_BUFFER_SIZE, result,
                  "\tMaximum input queue size:%d", MAX_QUEUE_SIZE);

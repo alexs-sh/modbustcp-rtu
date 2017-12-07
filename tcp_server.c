@@ -168,8 +168,9 @@ static int tcp_server_read_client(connection_t* conn) {
   assert(conn);
 
   info = get_common_info();
-  va_list list;
-  if (!high_client_read(conn, list)) {
+  int empty_arg = 0;
+
+  if (!high_client_read(conn, empty_arg)) {
     // Повреждение всех заисей, связанных с закрываемым подключением
     // queue_invalidate_recs(&info->tty_info->input_queue, conn);
 
@@ -243,8 +244,8 @@ int tcp_server_close_client(connection_t* conn) {
   if (server_info->nclients) server_info->nclients--;
 
   // printf("Number of clients: %d\n", info->tcp_server_info->nclients);
-  va_list list;
-  return high_client_close(conn, list);
+  int empty_arg = 0;
+  return high_client_close(conn, empty_arg);
 }
 
 /** @brief Функция для проверки подключений

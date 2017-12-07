@@ -124,7 +124,7 @@ static void print_info(common_info_t* info) {
   if (!info->settings->udp) {
     server_info = info->server_info;
     ;
-    printf("\tDisconnect timeout, ms:%d\n",
+    printf("\tDisconnect timeout, ms:%u\n",
            info->settings->disconnect_timeout_ms);
     printf("\tMaximum clients:%d\n", MAX_CONNECTIONS);
     printf("\tConnected clients:%d\n", server_info->nclients);
@@ -133,7 +133,7 @@ static void print_info(common_info_t* info) {
         counter++;
         ip_addr = socket_get_client_ip(server_info->clients_info[i].client->fd);
         ip_addr = htonl(ip_addr);
-        printf("\t\t%d) %d.%d.%d.%d:%d\n", counter,
+        printf("\t\t%d) %u.%u.%u.%u:%d\n", counter,
 
 #ifdef MX_BIG_ENDIAN
                (ip_addr & 0xFF000000) >> 24, (ip_addr & 0x00FF0000) >> 16,
@@ -149,7 +149,7 @@ static void print_info(common_info_t* info) {
 
   printf("\nSerial:\n");
   printf("\tDevice:%s\n", info->settings->device);
-  printf("\tSilence timeout, ms:%d\n", info->settings->silence_timeout_ms);
+  printf("\tSilence timeout, ms:%u\n", info->settings->silence_timeout_ms);
   printf("\tMaximum input queue size:%d\n", MAX_QUEUE_SIZE);
   printf("\tCurrent input queue size:%d\n",
          queue_get_size(&info->tty_info->input_queue));

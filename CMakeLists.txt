@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(MX_BIG_ENDIAN "0" CACHE BOOL "Target is big-endian system")
+#set(MX_BIG_ENDIAN "0" CACHE BOOL "Target is big-endian system")
 set (SRCs
   cmd_server.c
   connection.c
