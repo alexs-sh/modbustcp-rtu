@@ -30,11 +30,11 @@ struct high_client_info_t {
   //    struct server_info_t * server_info;
 };
 
-int high_client_read(connection_t* conn, va_list args);
+int high_client_read(connection_t* conn);
 
 void high_client_write(connection_t* conn, va_list args);
 
-int high_client_close(connection_t* conn, va_list args);
+int high_client_close(connection_t* conn);
 
 void high_client_process_message(message_t* message);
 

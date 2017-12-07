@@ -26,14 +26,16 @@
 #include "tcp_server.h"
 #endif
 
+#include <string.h>
+
 /** @brief Функция для чтения данных, поступивших с верхнего уровня
  * @param conn - указатель на обрабатываемый коннект
  * @return В случае успеха возвращает 1. Возвращает 0 - в случае ошибки чтения и
  * -1 в случае проблем с добавлением данных в обработчик послю порта
  */
-int high_client_read(connection_t *conn, va_list args) {
-  message_t input_msg = {0};
-
+int high_client_read(connection_t *conn) {
+  message_t input_msg;
+  memset(&input_msg, 0, sizeof(input_msg));
   uint16_t *ptr = (uint16_t *)&input_msg.pdu.data;
 
   const common_info_t *info = get_common_info();
@@ -78,7 +80,7 @@ int high_client_read(connection_t *conn, va_list args) {
  * @param conn - указатель на обрабатываемый коннект
  * @return В случае успеха возвращает 1.
  */
-int high_client_close(connection_t *conn, va_list args) {
+int high_client_close(connection_t *conn) {
   assert(conn);
 
   socket_close(conn->fd);

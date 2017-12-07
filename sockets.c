@@ -65,7 +65,8 @@ int socket_create(int type) {
  */
 int socket_bind(int s, const char *sock_addr, uint16_t port) {
   int optval = 1;
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   if (!SOCKET_VALIDATE(s)) return 0;
@@ -106,7 +107,8 @@ int socket_listen(int s) {
  */
 int socket_accept(int s, struct sockaddr *client_addr) {
   int client = 0;
-  struct sockaddr addr = {0};
+  struct sockaddr addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr);
 
   if (!SOCKET_VALIDATE(s)) return 0;
@@ -126,7 +128,8 @@ int socket_accept(int s, struct sockaddr *client_addr) {
  *
  */
 int socket_connect(int s, const char *srv_addr, uint16_t srv_port) {
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   assert(srv_addr);
@@ -235,7 +238,8 @@ int socket_get_blockmode(int s) {
 int socket_set_timeouts(int s, uint32_t read_timeout_ms,
                         uint32_t write_timeout_ms) {
   const int MSEC = 1000;
-  struct timeval timeout = {0};
+  struct timeval timeout;
+  memset(&timeout, 0, sizeof(timeout));
   int r_result = 1, w_result = 1;
 
   if (!SOCKET_VALIDATE(s)) return 0;
@@ -272,7 +276,8 @@ int socket_set_timeouts(int s, uint32_t read_timeout_ms,
 
 int socket_connect_async(int s, const char *srv_addr, uint16_t srv_port) {
   int result = 0, block_mode = 0;
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   if (!SOCKET_VALIDATE(s)) return 0;
@@ -324,7 +329,8 @@ int socket_get_input_data_len(int s) {
  *
  */
 uint32_t socket_get_client_ip(int s) {
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t addr_len = sizeof(struct sockaddr_in);
   if (getpeername(s, (struct sockaddr *)&addr, &addr_len) != 0) return 0;
 
@@ -339,7 +345,8 @@ uint32_t socket_get_client_ip(int s) {
  *
  */
 uint16_t socket_get_client_port(int s) {
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t addr_len = sizeof(struct sockaddr_in);
   if (getpeername(s, (struct sockaddr *)&addr, &addr_len) != 0) return 0;
 
@@ -388,7 +395,8 @@ int socket_write_tcp(int s, const void *src, uint16_t size) {
 int socket_read_udp_raw(int s, void *dst, uint16_t size, uint32_t *ip_addr,
                         uint16_t *port) {
   int result = 0;
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   assert(dst);
@@ -417,7 +425,8 @@ int socket_read_udp_raw(int s, void *dst, uint16_t size, uint32_t *ip_addr,
  */
 int socket_write_udp_raw(int s, const void *src, uint16_t size,
                          uint32_t ip_addr, uint16_t port) {
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   assert(src);
@@ -442,7 +451,8 @@ int socket_write_udp_raw(int s, const void *src, uint16_t size,
  */
 int socket_write_udp(int s, const void *src, uint16_t size, const char *ip_addr,
                      uint16_t port) {
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   socklen_t len = sizeof(struct sockaddr_in);
 
   assert(src);

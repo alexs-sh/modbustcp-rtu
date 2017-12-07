@@ -23,7 +23,7 @@ void trace_out(int force, char* color, const char* format, ...) {
 
   // Передать серверу управления
   va_start(args, format);
-  cmd_server_trace_out(force, color, format, args);
+  cmd_server_trace_out(force, format, args);
   va_end(args);
 
   if (info) {
@@ -51,7 +51,7 @@ void trace_buffer_out(char* color, uint8_t* buffer, uint16_t size) {
   assert(buffer);
 
   // Передать серверу управления
-  cmd_server_trace_buffer_out(color, buffer, size);
+  cmd_server_trace_buffer_out(buffer, size);
 
   if (!info->settings->trace) return;
 
@@ -60,8 +60,6 @@ void trace_buffer_out(char* color, uint8_t* buffer, uint16_t size) {
   for (i = 0; i < size; i++) {
     printf("%d ", buffer[i]);
   }
-
-  if (color) printf("%s", ANSI_COLOR_RESET);
 
   printf("\n");
 }

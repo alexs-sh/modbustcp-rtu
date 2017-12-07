@@ -313,7 +313,7 @@ static void print_info(common_info_t* info) {
     connections_pool_invalidate_obj(info->cmd_client->pool, info->cmd_client);
 }
 
-void cmd_server_trace_out(int force, char* color, const char* format, ...) {
+void cmd_server_trace_out(int force, const char* format, ...) {
   common_info_t* info = get_common_info();
 
   va_list args;
@@ -343,7 +343,7 @@ void cmd_server_trace_out(int force, char* color, const char* format, ...) {
     connections_pool_invalidate_obj(info->cmd_client->pool, info->cmd_client);
 }
 
-void cmd_server_trace_buffer_out(char* color, uint8_t* buffer, uint16_t size) {
+void cmd_server_trace_buffer_out(uint8_t* buffer, uint16_t size) {
   uint16_t i;
 
   int result = 0;

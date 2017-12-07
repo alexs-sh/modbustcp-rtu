@@ -83,7 +83,8 @@ error:
  * @return Возвращает 1 в случае успеха
  */
 static int udp_server_read(connection_t *conn) {
-  message_t input_msg = {0};
+  message_t input_msg;
+  memset(&input_msg, 0, sizeof(input_msg));
 
   int result = 0;
   uint8_t request[MESSAGE_BUFFER_SIZE] = {0};
