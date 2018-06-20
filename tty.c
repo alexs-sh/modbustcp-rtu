@@ -284,7 +284,7 @@ int tty_get_input_data_len(int fd) {
   return bytes;
 }
 
-  /* */
+/* */
 
 #ifdef UTILS_TEST
 #include <errno.h>

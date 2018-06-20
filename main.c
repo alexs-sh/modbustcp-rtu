@@ -185,13 +185,13 @@ int parse_settings(settings_t *settings, int argc, char *argv[]) {
           printf("Wrong message lifetime (>= 0) \n");
         break;
         /* размер очереди сообщений */
-      /*case 'q':
-          tmp = atol(optarg);
-          if(tmp > 0)
-              settings->queue_size = tmp;
-          else
-              printf("Wrong queue size \n");
-          break;*/
+        /*case 'q':
+            tmp = atol(optarg);
+            if(tmp > 0)
+                settings->queue_size = tmp;
+            else
+                printf("Wrong queue size \n");
+            break;*/
         /* вывод справки */
         /* "\t-r <value>        Message.Error code for unresponsive device (11
 by default)\n"

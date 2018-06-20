@@ -1,39 +1,99 @@
 stages:
-  - check
   - analyze
-  - build
-  - test
+  - arch
+  - dev
+  - ext
 
 variables:
-  GCC_PEDANTIC: '-pedantic'
-  GCC_STRICT: '-Wall -Wextra -Werror -std=c++98 -Wno-long-long -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-nested-anon-types -Wno-gnu-zero-variadic-macro-arguments'
-  GCC_CXX_FLAGS: '-O3 -DNDEBUG -fPIC -fno-rtti' 
-  MINGW_CXX_FLAGS: '-Wno-strict-aliasing'
+        #GCC_PEDANTIC: '-pedantic'
+  GCC_PEDANTIC: ''
+  GCC_STRICT: '-Wall -Wextra -Werror -Wno-long-long -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-nested-anon-types -Wno-gnu-zero-variadic-macro-arguments'
+  GCC_C_FLAGS: '-O3 -DNDEBUG' 
 
     # -----------------------------------------------------------------------------
     # Check SRCs 
     # -----------------------------------------------------------------------------
 sanity:
-  image: localhost:5000/arch-base 
-  stage: check
+  image: alexshcdr/tekon-debian-x86-64
+  stage: analyze
   script:
 
     - echo '1. Encoding'
     - find -name  '*.cpp' -o -name '*.h' -o -name 'CMakeLists.txt' | xargs file -is | grep  -E -v 'utf-8|us-ascii' && exit 1 || echo -e 'OK\n\n'
 
-    - echo '2. Coding Style'
-    - find -name '*.cpp' -o -name '*.h' | xargs clang-format -i -style=google
-    - git diff --exit-code || exit 1 && echo -e 'OK\n\n'
-
   tags:
     - docker
 
-   # -----------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # AMD64  
+    # -----------------------------------------------------------------------------
+x86-64:
+  image: alexshcdr/tekon-debian-x86-64
+  stage: arch
+  script:
+    - cmake . -DCMAKE_C_FLAGS="$GCC_C_FLAGS $GCC_STRICT $GCC_PEDANTIC"  
+    - make -j $NCPU
+  artifacts:
+    expire_in: 1 hour
+    paths:
+    - mb_driver_ext
+  tags:
+    - docker
+        
+    # -----------------------------------------------------------------------------
+    # ARMv7
+    # -----------------------------------------------------------------------------
+armhf:
+  stage: arch
+  image: alexshcdr/tekon-debian-armhf
+  script:
+    - cmake .  -DCMAKE_TOOLCHAIN_FILE="targets/xscale-uc8410a.cmake" -DCMAKE_C_FLAGS="$GCC_C_FLAGS $GCC_STRICT $GCC_PEDANTIC"
+    - make -j $NCPU
+  artifacts:
+    expire_in: 1 hour
+    paths:
+    - mb_driver_ext
+  tags:
+    - docker
+
+    # -----------------------------------------------------------------------------
+    # MOXA UC 7420 Plus
+    # -----------------------------------------------------------------------------
+uc7420-plus:
+  stage: dev
+  image: alexshcdr/mb_driver_ext_uc7420plus
+  script:
+    - cmake . -DCMAKE_C_COMPILER=/usr/local/xscale_be/bin/xscale_be-gcc  -DCMAKE_CXX_COMPILER=/usr/local/xscale_be/bin/xscale_be-g++ -DCMAKE_C_FLAGS="$GCC_C_FLAGS -DMX_BIG_ENDIAN=1 -Wall -Wextra"
+    - make -j $NCPU
+  artifacts:
+    expire_in: 1 hour
+    paths:
+    - mb_driver_ext
+  tags:
+    - docker
+
+    # -----------------------------------------------------------------------------
+    # MOXA UC 7112 Plus
+    # -----------------------------------------------------------------------------
+uc7112-plus:
+  stage: dev
+  image: alexshcdr/mb_driver_ext_uc7112plus 
+  script:
+    - cmake . -DCMAKE_C_COMPILER=/usr/local/arm-linux/bin/arm-linux-gcc -DCMAKE_CXX_COMPILER=/usr/local/arm-linux/bin/arm-linux-g++ -DCMAKE_C_FLAGS="$GCC_C_FLAGS -Wall"
+    - make -j $NCPU
+  artifacts:
+    expire_in: 1 hour
+    paths:
+    - mb_driver_ext
+  tags:
+    - docker
+
+    # -----------------------------------------------------------------------------
     # Static analyzers 
     # -----------------------------------------------------------------------------
 cppcheck:
-  image: localhost:5000/arch-analyze 
-  stage: analyze
+  image: alexshcdr/tekon-debian-analyze
+  stage: ext
   script:
     # Подготовка
     - echo 'No errors' > report_linux.txt
@@ -54,136 +114,3 @@ cppcheck:
     - report_linux.txt
   tags:
     - docker
-
-scan-build:
-  image: localhost:5000/arch-analyze 
-  stage: analyze
-  allow_failure: true
-  script:
-    - scan-build cmake .  -DCMAKE_CXX_COMPILER=/usr/lib/clang/c++-analyzer   -DCMAKE_CXX_FLAGS="-O3 -fPIC -Wall -Wextra -pedantic -std=c++98" -DVOLCANO_BUILD_TEST=1
-    - scan-build -o report make -j $NCPU
-    - find report -name '*.html' | grep html && exit 1 || echo 'OK\n\n'
-  artifacts:
-    expire_in: 7 day
-    when: always
-    paths:
-    - report
-  tags:
-    - docker
-
-  
-    # -----------------------------------------------------------------------------
-    # ARCH AMD64 Memory Sanitizer 
-    # -----------------------------------------------------------------------------
-arch-amd64-build-mem-undef-san:
-  image: localhost:5000/arch-base 
-  stage: build
-  script:
-    - cmake . -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_FLAGS='-g -fPIC -O1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-rtti -fsanitize=leak -fsanitize=address -fsanitize=undefined -std=c++98' 
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_iver_ext
-  tags:
-    - docker
-
-    # -----------------------------------------------------------------------------
-    # DEBIAN AMD64 Release 
-    # -----------------------------------------------------------------------------
-debian-amd64-build-release:
-  image: localhost:5000/debian-base 
-  stage: build
-  script:
-    - cmake . -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"  
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-      
-
-    # -----------------------------------------------------------------------------
-    # DEBIAN AMD64 Debug 
-    # -----------------------------------------------------------------------------
-debian-amd64-build-debug:
-  image: localhost:5000/debian-base 
-  stage: build
-  script:
-    - cmake . -DCMAKE_CXX_FLAGS="-g -fPIC -O0" 
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-      
-
-    # -----------------------------------------------------------------------------
-    # DEBIAN i386  
-    # -----------------------------------------------------------------------------
-debian-i386-build-release:
-  image: localhost:5000/debian-base-i386
-  stage: build
-  script:
-    - cmake . -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-      
-# -----------------------------------------------------------------------------
-# ARCH AARCH64  
-# -----------------------------------------------------------------------------
-arch-aarch64-build-odroid-c2:
-  stage: build
-  image: localhost:5000/arch-cross-aarch64
-  script:
-    - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/odroid-c2.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
-    - make -j $NCPU 
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-
-    # -----------------------------------------------------------------------------
-    # Debian ARMv7  MOXA UC 8410A 
-    # -----------------------------------------------------------------------------
-debian-armv7hf-build-uc8410a:
-  stage: build
-  image: localhost:5000/debian-cross-armv7hf 
-  script:
-    - cmake .  -DCMAKE_TOOLCHAIN_FILE="targets/xscale-uc8410a.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS $GCC_STRICT $GCC_PEDANTIC"
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-
-    # -----------------------------------------------------------------------------
-    # LINUX ARMv5  
-    # -----------------------------------------------------------------------------
-linux-armv5hf-build-orion-28:
-  stage: build
-  image: localhost:5000/debian-cross-orion-28
-  script:
-    - cmake . -DCMAKE_TOOLCHAIN_FILE="targets/freescale-orion-28.cmake" -DCMAKE_CXX_FLAGS="$GCC_CXX_FLAGS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS" 
-    - make -j $NCPU
-  artifacts:
-    expire_in: 1 hour
-    paths:
-    - mb_driver_ext
-  tags:
-    - docker
-
-

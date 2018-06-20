@@ -466,7 +466,7 @@ int socket_write_udp(int s, const void *src, uint16_t size, const char *ip_addr,
 
   return sendto(s, src, size, MSG_NOSIGNAL, (struct sockaddr *)&addr, len);
 }
-  /*----------- TEST ---------------------------------------------------------*/
+/*----------- TEST ---------------------------------------------------------*/
 
 #ifdef UTILS_TEST
 
