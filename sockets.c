@@ -30,6 +30,10 @@
 #include <errno.h>
 #endif
 
+#ifndef _SYS_TIME_H
+#include <sys/time.h>
+#endif
+
 #ifndef _ASSERT_H
 #include <assert.h>
 #endif  // _ASSERT_H

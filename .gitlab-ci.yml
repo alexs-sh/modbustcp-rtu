@@ -57,6 +57,24 @@ armhf:
     - docker
 
     # -----------------------------------------------------------------------------
+    # MOXA UC8410A ToolChain v2
+    # -----------------------------------------------------------------------------
+uc8410a-tcv2:
+  stage: dev
+  image: alexshcdr/mb_driver_ext_uc8410a_tcv2
+  script:
+    - cmake .  -DCMAKE_C_COMPILER=/usr/local/arm-linux-gnueabihf-4.9/usr/bin/arm-linux-gnueabihf-gcc  -DCMAKE_CXX_COMPILER=/usr/local/arm-linux-gnueabihf-4.9/usr/bin/arm-linux-gnueabihf-g++ -DCMAKE_C_FLAGS="-O3 -DNDEBUG -Wall -Wextra -Werror -Wno-long-long -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable"
+    - make -j $NCPU
+  artifacts:
+    expire_in: 1 hour
+    paths:
+    - mb_driver_ext
+  tags:
+    - docker
+
+
+
+    # -----------------------------------------------------------------------------
     # MOXA UC 7420 Plus
     # -----------------------------------------------------------------------------
 uc7420-plus:
