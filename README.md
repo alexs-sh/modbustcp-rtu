@@ -3,7 +3,7 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/alexs-sh/modbustcp-rtu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/alexs-sh/modbustcp-rtu/alerts/)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/alexs-sh/modbustcp-rtu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/alexs-sh/modbustcp-rtu/context:cpp)
 [![Build Status](https://gitlab.com/alexssh/modbustcp-rtu/badges/master/pipeline.svg)](https://gitlab.com/alexssh/modbustcp-rtu/-/commits/master)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### Запуск
 
