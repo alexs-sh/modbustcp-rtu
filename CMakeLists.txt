@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
+project(mb_driver_ext)
 
-#set(MX_BIG_ENDIAN "0" CACHE BOOL "Target is big-endian system")
+option(BIG_ENDIAN "Target is big-endian system" FALSE)
+
 set (SRCs
   cmd_server.c
   connection.c
@@ -19,5 +21,8 @@ set (SRCs
   udp_server.c
   )
 
+add_executable(${CMAKE_PROJECT_NAME} ${SRCs})
+if (${BIG_ENDIAN})
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC -DMX_BIG_ENDIAN)
+endif()
 
-add_executable(mb_driver_ext ${SRCs})

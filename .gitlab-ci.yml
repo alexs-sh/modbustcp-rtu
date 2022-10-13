@@ -5,13 +5,12 @@ stages:
   - ext
 
 variables:
-        #GCC_PEDANTIC: '-pedantic'
   GCC_PEDANTIC: ''
   GCC_STRICT: '-Wall -Wextra -Werror -Wno-long-long -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-nested-anon-types -Wno-gnu-zero-variadic-macro-arguments'
-  GCC_C_FLAGS: '-O3 -DNDEBUG' 
+  GCC_C_FLAGS: '-O3 -DNDEBUG'
 
     # -----------------------------------------------------------------------------
-    # Check SRCs 
+    # Check SRCs
     # -----------------------------------------------------------------------------
 sanity:
   image: alexshcdr/tekon-debian-x86-64
@@ -25,13 +24,13 @@ sanity:
     - docker
 
     # -----------------------------------------------------------------------------
-    # AMD64  
+    # AMD64
     # -----------------------------------------------------------------------------
 x86-64:
   image: alexshcdr/tekon-debian-x86-64
   stage: arch
   script:
-    - cmake . -DCMAKE_C_FLAGS="$GCC_C_FLAGS $GCC_STRICT $GCC_PEDANTIC"  
+    - cmake . -DCMAKE_C_FLAGS="$GCC_C_FLAGS $GCC_STRICT $GCC_PEDANTIC"
     - make -j $NCPU
   artifacts:
     expire_in: 1 hour
@@ -39,7 +38,7 @@ x86-64:
     - mb_driver_ext
   tags:
     - docker
-        
+
     # -----------------------------------------------------------------------------
     # ARMv7
     # -----------------------------------------------------------------------------
@@ -81,7 +80,7 @@ uc7420-plus:
   stage: dev
   image: alexshcdr/mb_driver_ext_uc7420plus
   script:
-    - cmake . -DCMAKE_C_COMPILER=/usr/local/xscale_be/bin/xscale_be-gcc  -DCMAKE_CXX_COMPILER=/usr/local/xscale_be/bin/xscale_be-g++ -DCMAKE_C_FLAGS="$GCC_C_FLAGS -DMX_BIG_ENDIAN=1 -Wall -Wextra"
+    - cmake . -DCMAKE_C_COMPILER=/usr/local/xscale_be/bin/xscale_be-gcc  -DCMAKE_CXX_COMPILER=/usr/local/xscale_be/bin/xscale_be-g++ -DCMAKE_C_FLAGS="$GCC_C_FLAGS -DBIG_ENDIAN=1 -Wall -Wextra"
     - make -j $NCPU
   artifacts:
     expire_in: 1 hour
@@ -95,7 +94,7 @@ uc7420-plus:
     # -----------------------------------------------------------------------------
 uc7112-plus:
   stage: dev
-  image: alexshcdr/mb_driver_ext_uc7112plus 
+  image: alexshcdr/mb_driver_ext_uc7112plus
   script:
     - cmake . -DCMAKE_C_COMPILER=/usr/local/arm-linux/bin/arm-linux-gcc -DCMAKE_CXX_COMPILER=/usr/local/arm-linux/bin/arm-linux-g++ -DCMAKE_C_FLAGS="$GCC_C_FLAGS -Wall"
     - make -j $NCPU
@@ -107,7 +106,7 @@ uc7112-plus:
     - docker
 
     # -----------------------------------------------------------------------------
-    # Static analyzers 
+    # Static analyzers
     # -----------------------------------------------------------------------------
 cppcheck:
   image: alexshcdr/tekon-debian-analyze
@@ -115,14 +114,14 @@ cppcheck:
   script:
     # Подготовка
     - echo 'No errors' > report_linux.txt
-       
+
     # CPPCHECK
     - cppcheck --enable=all  --verbose --quiet -I. .  2&>report_linux.txt
 
     # Вывод результатов
     - echo '1. Linux'
     - cat report_linux.txt
-      
+
     # Анализ ошибок
     - grep -E 'error|portability|performance' report_linux.txt  && exit 1 || echo 'OK'
   artifacts:
