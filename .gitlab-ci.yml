@@ -21,7 +21,7 @@ sanity:
     - find -name  '*.cpp' -o -name '*.h' -o -name 'CMakeLists.txt' | xargs file -is | grep  -E -v 'utf-8|us-ascii' && exit 1 || echo -e 'OK\n\n'
 
   tags:
-    - docker
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # AMD64
@@ -37,7 +37,7 @@ x86-64:
     paths:
     - mb_driver_ext
   tags:
-    - docker
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # ARMv7
@@ -53,7 +53,7 @@ armhf:
     paths:
     - mb_driver_ext
   tags:
-    - docker
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # MOXA UC8410A ToolChain v2
@@ -69,9 +69,7 @@ uc8410a-tcv2:
     paths:
     - mb_driver_ext
   tags:
-    - docker
-
-
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # MOXA UC 7420 Plus
@@ -87,7 +85,7 @@ uc7420-plus:
     paths:
     - mb_driver_ext
   tags:
-    - docker
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # MOXA UC 7112 Plus
@@ -103,7 +101,7 @@ uc7112-plus:
     paths:
     - mb_driver_ext
   tags:
-    - docker
+    - gitlab-org-docker
 
     # -----------------------------------------------------------------------------
     # Static analyzers
@@ -130,4 +128,4 @@ cppcheck:
     paths:
     - report_linux.txt
   tags:
-    - docker
+    - gitlab-org-docker
